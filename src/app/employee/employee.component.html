@@ -1,0 +1,49 @@
+
+<table style="background-color: rgb(153, 152, 146); border: brown; border-spacing: 0cqmax;">
+  <thead>
+    <tr>
+         <th>Employee ID</th>
+        <td *ngFor="let date of monthDates" style="block-size:0cqmax;">
+          {{ date.formattedDate }}
+        </td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let Employee of resultMonth; let i = index"> 
+      
+      <th>{{ Employee.employeeID }}</th>
+      
+      <td *ngFor="let date of monthDates">
+        <select #selectedShift (change)="onSelectionChange(selectedShift.value,Employee.employeeID,date.formattedDate)"
+        [disabled]="submitted || editingRow !== i">
+        <option value="NA"> NA </option>
+          <option value="Morning"> M </option>
+          <option value="Afternoon"> A </option>
+          <option value="General"> G </option>
+        </select>
+      </td>
+      <td>
+        <button (click)="EnableEditing(i)">Edit</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="centered-div">
+  <table>
+   <tbody>
+    <tr>
+      <td>
+        <button (click)="SubmitData()" [disabled]="submitted">Submit</button>
+      </td>
+      <td>
+        <button (click)="ExportToExcel()">Export to Excel</button>
+      </td>
+    </tr>
+   </tbody>
+</table>
+</div>
+
+
+
+
