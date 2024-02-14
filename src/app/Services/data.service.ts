@@ -9,7 +9,7 @@ import { MonthDate } from '../models/employee';
 export class DataService {
 
   private apiUrl ='https://localhost:7289/api/Employee/fortnight'
-  private apiUrlAdd ='https://localhost:7289/api/Employee/AddEmployee'
+
 
   constructor(private http: HttpClient) { }
 
@@ -17,8 +17,5 @@ export class DataService {
   {
     return this.http.get<MonthDate[]>(this.apiUrl);
   }
-  postEmployeeData(employee: MonthDate): Observable<any> 
-  {
-    return this.http.post<any>(this.apiUrl, employee);
-  }
+  
 }

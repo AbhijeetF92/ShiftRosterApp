@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import {MatTableModule} from '@angular/material/table';
 import { HttpClient } from '@angular/common/http';;
 import { DataService } from '../Services/data.service';
 import { FortnightService } from '../Services/fortnight.service';
 import { MonthDate } from '../models/employee';
 import { response } from 'express';
+import * as XLSX from 'xlsx';
 
 
 @Component({
@@ -15,17 +16,17 @@ import { response } from 'express';
 export class EmployeeComponent implements OnInit
 {
 
-  public monthDates! : Array<MonthDate>;
-  public resultMonth!: Array<MonthDate>;
+  public monthDates : MonthDate[] = [];
+  public resultMonth: MonthDate[] = [];
   monthDataList: MonthDate[] = [];
+  getEmployeeResult: MonthDate[]=[];
   submitted: boolean = false;
   exportToExcel: boolean=false;
   editingRow: number = -1;
-  
-  //letters: string[] = ['M', 'A', 'G'];  
   public dataAfterselection!: Array<MonthDate>;
+  @ViewChild('exportTable') exportTable!: ElementRef;
 
-  constructor(private _fortnightService: FortnightService,private _dataService:DataService, private _httpClient:HttpClient) 
+  constructor(private _fortnightService: FortnightService,private _dataService:DataService, private _httpClient:HttpClient)
   {
     
   }
@@ -62,8 +63,6 @@ export class EmployeeComponent implements OnInit
   {
     var request= new MonthDate();
     
-    //const jsonResult = JSON.stringify(this.monthDataList);
-
    console.log("Data before sending Post request", this.monthDataList);
 
     const endpoints="https://localhost:7289/api/Employee/AddEmployee";
@@ -80,11 +79,11 @@ export class EmployeeComponent implements OnInit
     this.submitted = true;
   }
     
-    private handleError(error: any): void {
+  private handleError(error: any): void {
        console.error('API error:', error);
     }
 
-    onSelectionChange(selectedShift: string, employeeId: string, date: string):any 
+  onSelectionChange(selectedShift: string, employeeId: string, date: string):any 
     {
       const monthDatares: MonthDate = new MonthDate();
       console.log('Selected Shift:', selectedShift);
@@ -98,16 +97,22 @@ export class EmployeeComponent implements OnInit
       this.monthDataList.push(monthDatares);
       console.log("Result of response:",this.monthDataList);
       
-    }
-    EnableEditing(index: number)
-    {
+   }
+  EnableEditing(index: number)
+   {
       this.editingRow = index;
       this.submitted = false;
-    }
-    ExportToExcel()
-    {
-      this.exportToExcel=true; 
-    }
+  }
+  ExportToExcel(): void 
+  {
+      const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.exportTable.nativeElement);
+      const wb: XLSX.WorkBook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+      /* save to file */
+      XLSX.writeFile(wb, 'exported_data.xlsx');
+      //this.exportToExcel=true;
+  }
 }
   
 
