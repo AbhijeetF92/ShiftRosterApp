@@ -1,0 +1,10 @@
+.odd-row {
+    background-color: #e2e4e7e1; /* or any color you prefer */
+}
+
+.even-row {
+    background-color: #979a9ada; /* or any color you prefer */
+}
+.mat-header-cell {
+    background-color: #c85050; /* or any fixed color you prefer for headers */
+  }

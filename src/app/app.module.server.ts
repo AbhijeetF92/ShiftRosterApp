@@ -4,6 +4,9 @@ import { EmployeeComponent } from './employee/employee.component';
 import { AppModule } from './app.module';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { MonthlyshiftComponent } from './monthlyshift/monthlyshift.component';
+import { AppComponent } from './app/app.component';
+
 //import { AppComponent } from './app.component';
 
 @NgModule({
@@ -13,6 +16,9 @@ import { FormsModule } from '@angular/forms';
     HttpClientModule,
     FormsModule 
   ],
-  bootstrap: [EmployeeComponent],
+  //bootstrap: [EmployeeComponent],
+  //bootstrap: [MonthlyshiftComponent],
+  bootstrap: [AppComponent],
+
 })
 export class AppServerModule {}

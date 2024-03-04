@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';;
 import { DataService } from '../Services/data.service';
 import { FortnightService } from '../Services/fortnight.service';
 import { MonthDate } from '../models/employee';
+import { MonthShiftDetails, MonthlyShift } from '../models/monthlyshift';
 import { response } from 'express';
 import * as XLSX from 'xlsx';
 
@@ -24,6 +25,11 @@ export class EmployeeComponent implements OnInit
   exportToExcel: boolean=false;
   editingRow: number = -1;
   public dataAfterselection!: Array<MonthDate>;
+  public _MonthlyShift!: Array<MonthlyShift>;
+  public _MonthShiftDetails:MonthShiftDetails[] = [];
+  public monthDatares: MonthlyShift = new MonthlyShift();
+
+
   @ViewChild('exportTable') exportTable!: ElementRef;
 
   constructor(private _fortnightService: FortnightService,private _dataService:DataService, private _httpClient:HttpClient)
@@ -54,21 +60,21 @@ export class EmployeeComponent implements OnInit
     
     this._dataService.getEmployeeData().subscribe((res) =>
       {
-          this.resultMonth=res;
-          console.log("Post API Responses",this.resultMonth);
+          this._MonthlyShift=res;
+          console.log("Post API Responses", this._MonthlyShift);
       });
   }
 
   SubmitData()
   {
-    var request= new MonthDate();
+    var request= new MonthlyShift();
     
-   console.log("Data before sending Post request", this.monthDataList);
+   console.log("Data before sending Post request", this.monthDatares);
 
     const endpoints="https://localhost:7289/api/Employee/AddEmployee";
-    this._httpClient.post<MonthDate>(endpoints,this.monthDataList).subscribe({
+    this._httpClient.post<MonthlyShift>(endpoints,this.monthDatares).subscribe({
       next:(response)=>{
-        this.monthDates=this.monthDates;
+        this.monthDatares=this.monthDatares;
       },
       error: (error) => {
         this.handleError(error);        
@@ -84,22 +90,26 @@ export class EmployeeComponent implements OnInit
     }
 
   onSelectionChange(selectedShift: string, employeeId: string, date: string):any 
-    {
-      const monthDatares: MonthDate = new MonthDate();
+  {
+       
+      const shiftdetails:MonthShiftDetails=new MonthShiftDetails();
       console.log('Selected Shift:', selectedShift);
       console.log('Employee ID:', employeeId);
       console.log('Date:', date);
 
-      monthDatares.formattedDate=date;
-      monthDatares.employeeID=employeeId;
-      monthDatares.selectedLetter=selectedShift; 
-      monthDatares.id="";  
-      this.monthDataList.push(monthDatares);
-      console.log("Result of response:",this.monthDataList);
+      shiftdetails.date=date;
+      shiftdetails.shift=selectedShift;
+      this._MonthShiftDetails.push(shiftdetails);
+      this.monthDatares.name=employeeId;
+      this.monthDatares.id="";
+      this.monthDatares._monthShiftData=this._MonthShiftDetails;      
+
+      //this.monthDataList.push(monthDatares);
+      console.log("Result of response:",this.monthDatares);
       
    }
   EnableEditing(index: number)
-   {
+  {
       this.editingRow = index;
       this.submitted = false;
   }

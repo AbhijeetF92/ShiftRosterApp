@@ -1,22 +1,23 @@
 
-<table style="background-color: rgb(153, 152, 146); border: rgb(18, 17, 17); border-spacing: 0cqmax;" #exportTable>
+<table style="background-color: rgb(138, 138, 138); border: rgb(18, 17, 17); border-spacing: 0cqmax;" #exportTable>
   <thead>
     <tr>
-         <th>Employee ID</th>
+        <th>Employee Name</th>
         <td *ngFor="let date of monthDates" style="block-size:0cqmax;">
           {{ date.formattedDate }}
         </td>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let Employee of resultMonth; let i = index"> 
+    <tr *ngFor="let Employee of _MonthlyShift; let i = index"> 
       
-      <th>{{ Employee.employeeID }}</th>
+      <th>{{ Employee.name }}</th>
       
-      <td *ngFor="let date of monthDates">
-        <select #selectedShift (change)="onSelectionChange(selectedShift.value,Employee.employeeID,date.formattedDate)"
+      <td *ngFor="let date of Employee._monthShiftData">
+        <select #selectedShift (change)="onSelectionChange(selectedShift.value,Employee.name,date.date)"
         [disabled]="submitted || editingRow !== i">
-        <option value="NA"> NA </option>
+          <option value=""> {{date.shift}} </option>
+          <option value="NA"> NA </option>
           <option value="Morning"> M </option>
           <option value="Afternoon"> A </option>
           <option value="General"> G </option>
